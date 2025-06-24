@@ -1,0 +1,27 @@
+﻿using CarX;
+using DB.Meta;
+
+namespace KSL.API.Extensions
+{
+    public static class GameContext
+    {
+        public static CarContext Car => CarState.Current;
+
+        public static RaceCar RaceCar => Car?.RaceCar;
+        public static PlayerCarProfile Profile => Car?.Profile;
+        public static Wheel[] Wheels => Car?.Wheels;
+        public static CarX.Car CarX => Car?.CarX;
+        public static BaseCar.Desc Desc => Car?.Desc;
+
+        public static bool CarIsValid => Car?.IsValid() ?? false;
+        public static bool CarIsLinked => Car?.IsLinked ?? false;
+
+        public static bool IsOnTrack => GameStateTracker.IsOnTrack;
+        public static bool IsInGarage => GameStateTracker.IsInGarage;
+        public static bool IsOnValidSurface => GameStateTracker.IsOnValidSurface;
+        public static bool HasSurfaceMismatch => GameStateTracker.HasSurfaceMismatch;
+
+        public static float OffTrackTime => GameStateTracker.OffTrackTime;
+        public static bool IsDrifting => GameStateTracker.IsDrifting;
+    }
+}
