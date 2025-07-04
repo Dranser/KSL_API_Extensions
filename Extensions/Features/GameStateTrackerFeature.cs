@@ -1,6 +1,6 @@
 ﻿using KSL.API.Extensions;
 
-public class GameStateTrackerFeature : ModFeatureBase
+public class GameStateTrackerFeature : FeatureBase
 {
     public override string Id => "system.gamestate";
     public override bool IsSystem => true;

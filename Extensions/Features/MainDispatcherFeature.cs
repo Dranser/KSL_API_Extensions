@@ -1,6 +1,6 @@
 ﻿using KSL.API.Extensions;
 
-public class MainDispatcherFeature : ModFeatureBase
+public class MainDispatcherFeature : FeatureBase
 {
     public override string Id => "system.dispatcher";
     public override bool IsSystem => true;

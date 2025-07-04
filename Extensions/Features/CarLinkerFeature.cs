@@ -1,6 +1,6 @@
 ﻿using KSL.API.Extensions;
 
-public class CarLinkerFeature : ModFeatureBase
+public class CarLinkerFeature : FeatureBase
 {
     public override string Id => "system.carlinker";
     public override bool IsSystem => true;

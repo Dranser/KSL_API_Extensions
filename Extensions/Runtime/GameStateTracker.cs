@@ -39,7 +39,6 @@ namespace KSL.API.Extensions
             var ctx = CarState.Current;
             Surface = SurfaceAnalyzer.Analyze(ctx?.Wheels);
 
-            LapTimer.Update();
             UpdateDriftAndOffTrack(ctx);
         }
 
