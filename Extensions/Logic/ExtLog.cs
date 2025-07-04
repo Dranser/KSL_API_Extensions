@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 
 namespace KSL.API.Extensions
@@ -18,7 +18,7 @@ namespace KSL.API.Extensions
             }
         }
 
-        private static readonly Dictionary<string, LogEntry> _logBuffer = new Dictionary<string, LogEntry>();
+        private static readonly ConcurrentDictionary<string, LogEntry> _logBuffer = new ConcurrentDictionary<string, LogEntry>();
         private const int Threshold = 128;
 
         public static void Info(string message, bool spamProtected = false, [CallerMemberName] string caller = "", [CallerFilePath] string file = "")
@@ -52,18 +52,15 @@ namespace KSL.API.Extensions
                 return;
             }
 
-            if (_logBuffer.TryGetValue(key, out var entry))
+            var entry = _logBuffer.AddOrUpdate(
+                key,
+                _ => new LogEntry { Message = message, Tag = origin, Count = 1 },
+                (_, e) => { e.Count++; return e; });
+
+            if (entry.Count >= Threshold)
             {
-                entry.Count++;
-                if (entry.Count >= Threshold)
-                {
-                    target(entry.ToString());
-                    _logBuffer.Remove(key);
-                }
-            }
-            else
-            {
-                _logBuffer[key] = new LogEntry { Message = message, Tag = origin, Count = 1 };
+                target(entry.ToString());
+                _logBuffer.TryRemove(key, out _);
             }
         }
     }

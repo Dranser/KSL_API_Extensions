@@ -81,8 +81,8 @@ namespace KSL.API.Extensions
         {
             foreach (var f in _features.Values)
             {
-                if (f.Enabled && f is IModFeatureLifecycle lifecycle)
-                    lifecycle.Update();
+                if (f.Enabled)
+                    f.Update();
             }
         }
 
@@ -117,8 +117,7 @@ namespace KSL.API.Extensions
                         continue;
                 }
 
-                if (f is IModFeatureLifecycle lifecycle)
-                    lifecycle.Draw();
+                f.Draw();
             }
         }
 

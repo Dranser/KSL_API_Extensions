@@ -1,6 +1,9 @@
-﻿namespace KSL.API.Extensions
+namespace KSL.API.Extensions
 {
-    public abstract class ModFeatureBase : IModFeature, IModFeatureLifecycle
+    /// <summary>
+    /// Convenience base class for implementing <see cref="IModFeature"/>.
+    /// </summary>
+    public abstract class ModFeatureBase : IModFeature
     {
         public abstract string Id { get; }
         public virtual bool Enabled => true;

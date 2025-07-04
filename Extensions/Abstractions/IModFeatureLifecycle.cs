@@ -1,4 +1,4 @@
-﻿public interface IModFeatureLifecycle
+public interface IModFeatureLifecycle
 {
     void Update();
     void Draw();
