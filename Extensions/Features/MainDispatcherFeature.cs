@@ -1,19 +1,12 @@
-﻿namespace KSL.API.Extensions
+﻿using KSL.API.Extensions;
+
+public class MainDispatcherFeature : ModFeatureBase
 {
-    public class MainDispatcherFeature : IModFeature
+    public override string Id => "system.dispatcher";
+    public override bool IsSystem => true;
+
+    public override void OnInit()
     {
-        public string Id => "system.dispatcher";
-        public bool Enabled => true;
-        public bool IsSystem => true;
-
-        public void OnInit()
-        {
-            MainThreadDispatcher.Init();
-            GameStateTracker.Init();
-        }
-
-        public void OnReady() { }
-
-        public void OnShutdown() { }
+        MainThreadDispatcher.Init();
     }
 }
