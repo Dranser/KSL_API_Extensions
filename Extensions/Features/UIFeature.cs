@@ -12,6 +12,11 @@
             UIContext.Init();
         }
 
+        public override void OnShutdown()
+        {
+            UIContext.Shutdown();
+        }
+
         public void Update()
         {
 

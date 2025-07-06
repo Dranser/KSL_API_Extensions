@@ -48,5 +48,10 @@ namespace KSL.API.Extensions.UI
                     _notifications.RemoveAt(i);
             }
         }
+
+        public static void Clear()
+        {
+            _notifications.Clear();
+        }
     }
 }

@@ -63,5 +63,10 @@ namespace KSL.API.Extensions.UI
                 item.Drawer?.Invoke(rect);
             }
         }
+
+        public static void Clear()
+        {
+            _hudItems.Clear();
+        }
     }
 }
