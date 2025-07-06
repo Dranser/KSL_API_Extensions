@@ -5,6 +5,7 @@
         None,
         CarValid,
         OnTrack,
-        CarReadyOnTrack
+        CarReadyOnTrack,
+        ActiveSession
     }
 }

@@ -61,6 +61,11 @@ namespace KSL.API.Extensions
             }
         }
 
+        public static void DiscoverUI(Assembly assembly)
+        {
+            UIContext.DiscoverUI(assembly);
+        }
+
         public static void Ready()
         {
             foreach (var f in _features.Values)
@@ -92,34 +97,7 @@ namespace KSL.API.Extensions
         {
             foreach (var f in _features.Values)
             {
-                if (!f.Enabled)
-                    continue;
-
-                var type = f.GetType();
-                var attr = (DrawConditionAttribute)Attribute.GetCustomAttribute(type, typeof(DrawConditionAttribute));
-                if (attr != null)
-                {
-                    bool visible = true;
-                    switch (attr.Condition)
-                    {
-                        case DrawConditionType.None:
-                            visible = true;
-                            break;
-                        case DrawConditionType.CarValid:
-                            visible = GameContext.CarIsValid;
-                            break;
-                        case DrawConditionType.OnTrack:
-                            visible = GameContext.IsOnTrack;
-                            break;
-                        case DrawConditionType.CarReadyOnTrack:
-                            visible = GameContext.CarIsValid && GameContext.IsOnTrack;
-                            break;
-                    }
-                    if (!visible)
-                        continue;
-                }
-
-                if (f is IModFeatureLifecycle lifecycle)
+                if (f.Enabled && f is IModFeatureLifecycle lifecycle)
                     lifecycle.Draw();
             }
         }

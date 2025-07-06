@@ -14,6 +14,7 @@ namespace KSL.API.Extensions.UI
         private bool _wasCentered = false;
 
         private float _animatedHeight;
+        private bool _forceImmediateResize = false;
 
         public UIWindow(string id, string title, float width, float initialHeight)
         {
@@ -33,6 +34,7 @@ namespace KSL.API.Extensions.UI
         public void RequestRebuild()
         {
             _needsRebuild = true;
+            _forceImmediateResize = true;
         }
 
         public void Refresh()
@@ -63,16 +65,24 @@ namespace KSL.API.Extensions.UI
             float contentHeight = _builder.GetTotalHeight(contentWidth);
             float targetHeight = Mathf.Clamp(contentHeight + 40f, 100f, 1080f);
 
-            _animatedHeight = Mathf.Lerp(_animatedHeight, targetHeight, 0.2f);
+            if (_forceImmediateResize)
+            {
+                _animatedHeight = targetHeight;
+                _forceImmediateResize = false;
+            }
+            else
+            {
+                _animatedHeight = Mathf.Lerp(_animatedHeight, targetHeight, 0.2f);
+            }
 
             WindowRect.height = _animatedHeight;
 
-            var contentRect = new Rect(10f, 30f, contentWidth, contentHeight);
-            GUI.BeginGroup(contentRect);
-            _builder.Draw(new Rect(0, 0, contentWidth, contentHeight));
-            GUI.EndGroup();
+            var contentRect = new UnityEngine.Rect(10f, 30f, contentWidth, contentHeight);
+            UnityEngine.GUI.BeginGroup(contentRect);
+            _builder.Draw(new UnityEngine.Rect(0, 0, contentWidth, contentHeight));
+            UnityEngine.GUI.EndGroup();
 
-            GUI.DragWindow(new Rect(0, 0, WindowRect.width, 24f));
+            UnityEngine.GUI.DragWindow(new UnityEngine.Rect(0, 0, WindowRect.width, 24f));
         }
 
         private void Center()

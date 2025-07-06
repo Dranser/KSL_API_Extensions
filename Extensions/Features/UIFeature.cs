@@ -1,7 +1,9 @@
-﻿namespace KSL.API.Extensions.UI
+﻿using System.Reflection;
+
+namespace KSL.API.Extensions.UI
 {
     [ModFeature]
-    [DrawCondition(DrawConditionType.None)]
+    [DrawCondition(DrawConditionType.ActiveSession)]
     public class UIFeature : FeatureBase, IModFeatureLifecycle
     {
         public override string Id => "system.ui";
@@ -10,16 +12,11 @@
         public override void OnInit()
         {
             UIContext.Init();
-        }
-
-        public override void OnShutdown()
-        {
-            UIContext.Shutdown();
+            UIContext.DiscoverUI(Assembly.GetExecutingAssembly());
         }
 
         public void Update()
         {
-
         }
 
         public void Draw()

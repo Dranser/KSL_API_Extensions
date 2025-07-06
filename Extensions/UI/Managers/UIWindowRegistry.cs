@@ -1,39 +1,46 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using KSL.API.Extensions;
 
 namespace KSL.API.Extensions.UI
 {
     public static class UIWindowRegistry
     {
-        private class WindowEntry
+        private class Entry
         {
             public UIWindow Window;
-            public DrawConditionType Condition;
+            public DrawConditionType? Condition;
         }
 
-        private static readonly List<WindowEntry> _windows = new List<WindowEntry>();
+        private static readonly List<Entry> _entries = new List<Entry>();
 
-        public static void Register(UIWindow window, DrawConditionType condition = DrawConditionType.None)
+        public static void Register(UIWindow window, DrawConditionType? condition = null)
         {
             if (window == null)
                 return;
-            if (_windows.Exists(e => e.Window == window))
+
+            if (_entries.Exists(e => e.Window == window))
                 return;
-            _windows.Add(new WindowEntry { Window = window, Condition = condition });
+
+            _entries.Add(new Entry { Window = window, Condition = condition });
         }
 
         public static void DrawAll()
         {
-            foreach (var entry in _windows)
+            foreach (var entry in _entries)
             {
-                if (ShouldDraw(entry.Condition))
-                    entry.Window.Draw();
+                if (!IsVisible(entry.Condition))
+                    continue;
+
+                entry.Window.Draw();
             }
         }
 
-        private static bool ShouldDraw(DrawConditionType condition)
+        private static bool IsVisible(DrawConditionType? condition)
         {
-            switch (condition)
+            if (!condition.HasValue)
+                return true;
+
+            switch (condition.Value)
             {
                 case DrawConditionType.None:
                     return true;
@@ -43,14 +50,11 @@ namespace KSL.API.Extensions.UI
                     return GameContext.IsOnTrack;
                 case DrawConditionType.CarReadyOnTrack:
                     return GameContext.CarIsValid && GameContext.IsOnTrack;
+                case DrawConditionType.ActiveSession:
+                    return GameContext.IsInGarage || GameContext.IsOnTrack;
                 default:
                     return true;
             }
-        }
-
-        public static void Clear()
-        {
-            _windows.Clear();
         }
     }
 }

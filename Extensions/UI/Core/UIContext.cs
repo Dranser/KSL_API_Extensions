@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Reflection;
-using KSL.API.Extensions;
 
 namespace KSL.API.Extensions.UI
 {
@@ -8,7 +7,6 @@ namespace KSL.API.Extensions.UI
     {
         public static void Init()
         {
-            DiscoverUI(Assembly.GetExecutingAssembly());
         }
 
         public static void DiscoverUI(Assembly assembly)
@@ -17,15 +15,14 @@ namespace KSL.API.Extensions.UI
             {
                 if (type.GetCustomAttribute<UIWindowAttribute>() != null)
                 {
-                    ExtLog.Info($"UI: Found window class {type.FullName}");
-
                     var method = type.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
                     if (method != null)
                     {
                         var window = (UIWindow)method.Invoke(null, null);
-                        var condAttr = type.GetCustomAttribute<DrawConditionAttribute>();
-                        var condition = condAttr?.Condition ?? DrawConditionType.None;
-                        ExtLog.Info($"UI: Created window {window?.Title}");
+
+                        var conditionAttr = type.GetCustomAttribute<DrawConditionAttribute>();
+                        DrawConditionType? condition = conditionAttr?.Condition;
+
                         RegisterWindow(window, condition);
                     }
                     else
@@ -45,9 +42,8 @@ namespace KSL.API.Extensions.UI
             UIHUDManager.DrawAll();
         }
 
-        public static void RegisterWindow(UIWindow window, DrawConditionType condition = DrawConditionType.None)
+        public static void RegisterWindow(UIWindow window, DrawConditionType? condition = null)
         {
-            ExtLog.Info($"UI: RegisterWindow called for {window?.Title}");
             UIWindowRegistry.Register(window, condition);
         }
 
@@ -59,13 +55,6 @@ namespace KSL.API.Extensions.UI
         public static void RegisterHUD(string id, Action<UnityEngine.Rect> drawer)
         {
             UIHUDManager.Register(id, drawer);
-        }
-
-        public static void Shutdown()
-        {
-            UIWindowRegistry.Clear();
-            UINotificationManager.Clear();
-            UIHUDManager.Clear();
         }
     }
 }
