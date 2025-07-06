@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using KSL.API.Extensions.UI;
 
 namespace KSL.API.Extensions
 {
@@ -15,6 +16,7 @@ namespace KSL.API.Extensions
             Register(new MainDispatcherFeature());
             Register(new GameStateTrackerFeature());
             Register(new CarLinkerFeature());
+            Register(new UIFeature());
 
             Ready();
         }
@@ -57,6 +59,11 @@ namespace KSL.API.Extensions
                 var feature = (IModFeature)Activator.CreateInstance(type);
                 Register(feature);
             }
+        }
+
+        public static void DiscoverUI(Assembly assembly)
+        {
+            UIContext.DiscoverUI(assembly);
         }
 
         public static void Ready()
