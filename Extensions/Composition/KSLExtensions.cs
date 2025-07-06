@@ -61,11 +61,6 @@ namespace KSL.API.Extensions
             }
         }
 
-        public static void DiscoverUI(Assembly assembly)
-        {
-            UIContext.DiscoverUI(assembly);
-        }
-
         public static void Ready()
         {
             foreach (var f in _features.Values)
