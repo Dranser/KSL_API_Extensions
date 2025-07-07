@@ -43,5 +43,43 @@ namespace KSL.API.Extensions.UI
 
             return tex;
         }
+
+        public static Texture2D GenerateTriangleRight(int width, int height, Color32 color)
+        {
+            var tex = new Texture2D(width, height);
+            var pixels = new Color32[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (x >= y * width / height)
+                        pixels[y * width + x] = color;
+                    else
+                        pixels[y * width + x] = new Color32(0, 0, 0, 0);
+                }
+            }
+            tex.SetPixels32(pixels);
+            tex.Apply();
+            return tex;
+        }
+
+        public static Texture2D GenerateTriangleDown(int width, int height, Color32 color)
+        {
+            var tex = new Texture2D(width, height);
+            var pixels = new Color32[width * height];
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    if (y >= x * height / width)
+                        pixels[y * width + x] = color;
+                    else
+                        pixels[y * width + x] = new Color32(0, 0, 0, 0);
+                }
+            }
+            tex.SetPixels32(pixels);
+            tex.Apply();
+            return tex;
+        }
     }
 }

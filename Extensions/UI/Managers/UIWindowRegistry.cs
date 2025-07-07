@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using KSL.API.Extensions;
 
 namespace KSL.API.Extensions.UI
 {
@@ -21,7 +20,10 @@ namespace KSL.API.Extensions.UI
             if (_entries.Exists(e => e.Window == window))
                 return;
 
-            _entries.Add(new Entry { Window = window, Condition = condition });
+            var entry = new Entry { Window = window, Condition = condition };
+            _entries.Add(entry);
+
+            UIContext.InvalidateRequested += window.RequestRebuild;
         }
 
         public static void DrawAll()

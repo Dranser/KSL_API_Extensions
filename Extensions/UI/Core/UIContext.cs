@@ -5,6 +5,8 @@ namespace KSL.API.Extensions.UI
 {
     public static class UIContext
     {
+        public static event Action InvalidateRequested;
+
         public static void Init()
         {
         }
@@ -13,6 +15,9 @@ namespace KSL.API.Extensions.UI
         {
             foreach (var type in assembly.GetTypes())
             {
+                if (type.GetCustomAttribute<ExampleAttribute>() != null)
+                    continue;
+
                 if (type.GetCustomAttribute<UIWindowAttribute>() != null)
                 {
                     var method = type.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
@@ -55,6 +60,11 @@ namespace KSL.API.Extensions.UI
         public static void RegisterHUD(string id, Action<UnityEngine.Rect> drawer)
         {
             UIHUDManager.Register(id, drawer);
+        }
+
+        public static void Invalidate()
+        {
+            InvalidateRequested?.Invoke();
         }
     }
 }

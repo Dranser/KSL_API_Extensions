@@ -46,6 +46,16 @@ namespace KSL.API.Extensions.UI
             var arrowRect = new Rect(rect.x + rect.width - 20f, rect.y + 4f, 16f, 20f);
             GUI.Label(arrowRect, arrow, UIStyle.LabelStyle);
 
+            if (_expanded)
+            {
+                float newTarget = ComputeTargetHeight(rect.width);
+                if (Mathf.Abs(_targetHeight - newTarget) > 0.1f)
+                {
+                    _targetHeight = newTarget;
+                    _animatedHeight = newTarget;
+                }
+            }
+
             if (_animatedHeight <= 28f + 0.1f)
                 return;
 

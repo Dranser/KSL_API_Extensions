@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace KSL.API.Extensions.UI
 {
     public class UILabel : UIElementBase
     {
-        private readonly string _text;
-
-        public UILabel(string text)
+        private readonly System.Func<string> _getter;
+        private string _lastText = "";
+        public UILabel(System.Func<string> getter)
         {
-            _text = text;
+            _getter = getter;
         }
 
-        public override float GetHeight(float width) => 20f;
+        public override float GetHeight(float width)
+        {
+            _lastText = _getter?.Invoke() ?? "";
+            var content = new GUIContent(_lastText);
+            return UIStyle.LabelStyle.CalcHeight(content, width);
+        }
 
         public override void Draw(Rect rect)
         {
-            GUI.Label(rect, _text, UIStyle.LabelStyle);
+            GUI.Label(rect, _lastText, UIStyle.LabelStyle);
         }
     }
 }

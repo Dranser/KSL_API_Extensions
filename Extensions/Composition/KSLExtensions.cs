@@ -50,6 +50,9 @@ namespace KSL.API.Extensions
                 if (type.GetCustomAttribute<ModFeatureAttribute>() == null)
                     continue;
 
+                if (type.GetCustomAttribute<ExampleAttribute>() != null)
+                    continue;
+
                 if (type.GetConstructor(Type.EmptyTypes) == null)
                 {
                     ExtLog.Warning($"Skipping {type.FullName}: no parameterless constructor");

@@ -10,9 +10,12 @@ namespace KSL.API.Extensions.UI
         public static GUIStyle ButtonStyle;
         public static GUIStyle ToggleStyle;
         public static GUIStyle SectionHeaderStyle;
+        public static GUIStyle CollapseHeaderStyle;
         public static GUIStyle SectionContentStyle;
         public static GUIStyle WindowStyle;
         public static GUIStyle NotificationStyle;
+
+        public static float CollapseHeaderHeight = 24f;
 
         private static Texture2D _windowBg;
         private static Texture2D _sectionHeaderBg;
@@ -58,6 +61,7 @@ namespace KSL.API.Extensions.UI
             LabelStyle = new GUIStyle(GUI.skin.label)
             {
                 fontSize = 13,
+                wordWrap = true,
                 normal = { textColor = Color.white }
             };
 
@@ -94,6 +98,8 @@ namespace KSL.API.Extensions.UI
                 focused = { background = _sectionHeaderBg, textColor = Color.white },
                 onFocused = { background = _sectionHeaderBg, textColor = Color.white }
             };
+
+            CollapseHeaderStyle = new GUIStyle(SectionHeaderStyle);
 
             SectionContentStyle = new GUIStyle(GUI.skin.box)
             {

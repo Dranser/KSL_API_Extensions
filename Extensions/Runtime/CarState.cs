@@ -1,4 +1,5 @@
 ﻿using System;
+using KSL.API.Extensions.UI;
 
 namespace KSL.API.Extensions
 {
@@ -23,14 +24,21 @@ namespace KSL.API.Extensions
             Current = newContext;
 
             if (previousId.HasValue && previousId.Value == newId)
+            {
                 CarUpdated?.Invoke(newContext);
+            }
             else
+            {
                 CarChanged?.Invoke(newContext);
+            }
+            
+            UIContext.Invalidate();
         }
 
         public static void Clear()
         {
             Current = null;
+            UIContext.Invalidate();
         }
     }
 }
