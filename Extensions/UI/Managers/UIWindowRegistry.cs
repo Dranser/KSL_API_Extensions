@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace KSL.API.Extensions.UI
 {
@@ -7,21 +8,21 @@ namespace KSL.API.Extensions.UI
         private class Entry
         {
             public UIWindow Window;
-            public DrawConditionType? Condition;
+            public Func<bool> Condition;
         }
 
         private static readonly List<Entry> _entries = new List<Entry>();
 
-        public static void Register(UIWindow window, DrawConditionType? condition = null)
+        public static void Register(UIWindow window, Func<bool> condition = null)
         {
-            if (window == null)
-                return;
+            if (window == null) return;
+            if (_entries.Exists(e => e.Window == window)) return;
 
-            if (_entries.Exists(e => e.Window == window))
-                return;
-
-            var entry = new Entry { Window = window, Condition = condition };
-            _entries.Add(entry);
+            _entries.Add(new Entry
+            {
+                Window = window,
+                Condition = condition
+            });
 
             UIContext.InvalidateRequested += window.RequestRebuild;
         }
@@ -30,32 +31,8 @@ namespace KSL.API.Extensions.UI
         {
             foreach (var entry in _entries)
             {
-                if (!IsVisible(entry.Condition))
-                    continue;
-
-                entry.Window.Draw();
-            }
-        }
-
-        private static bool IsVisible(DrawConditionType? condition)
-        {
-            if (!condition.HasValue)
-                return true;
-
-            switch (condition.Value)
-            {
-                case DrawConditionType.None:
-                    return true;
-                case DrawConditionType.CarValid:
-                    return GameContext.CarIsValid;
-                case DrawConditionType.OnTrack:
-                    return GameContext.IsOnTrack;
-                case DrawConditionType.CarReadyOnTrack:
-                    return GameContext.CarIsValid && GameContext.IsOnTrack;
-                case DrawConditionType.ActiveSession:
-                    return GameContext.IsInGarage || GameContext.IsOnTrack;
-                default:
-                    return true;
+                if (entry.Condition == null || entry.Condition())
+                    entry.Window.Draw();
             }
         }
     }

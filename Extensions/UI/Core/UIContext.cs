@@ -16,26 +16,15 @@ namespace KSL.API.Extensions.UI
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (type.GetCustomAttribute<ExampleAttribute>() != null)
-                    continue;
+                if (type.GetCustomAttribute<UIWindowAttribute>() == null) continue;
+                if (!typeof(IUIWindowBuilder).IsAssignableFrom(type)) continue;
 
-                if (type.GetCustomAttribute<UIWindowAttribute>() != null)
-                {
-                    var method = type.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
-                    if (method != null)
-                    {
-                        var window = (UIWindow)method.Invoke(null, null);
+                var instance = (IUIWindowBuilder)Activator.CreateInstance(type);
+                if (instance == null) continue;
 
-                        var conditionAttr = type.GetCustomAttribute<DrawConditionAttribute>();
-                        DrawConditionType? condition = conditionAttr?.Condition;
-
-                        RegisterWindow(window, condition);
-                    }
-                    else
-                    {
-                        ExtLog.Warning($"UI: No Create() method in {type.FullName}");
-                    }
-                }
+                var window = new UIWindow(instance.Id, instance.Title, instance.Width, instance.Height);
+                window.Build(instance.Build);
+                RegisterWindow(window, instance.Condition);
             }
         }
 
@@ -48,7 +37,7 @@ namespace KSL.API.Extensions.UI
             UIHUDManager.DrawAll();
         }
 
-        public static void RegisterWindow(UIWindow window, DrawConditionType? condition = null)
+        public static void RegisterWindow(UIWindow window, Func<bool> condition = null)
         {
             UIWindowRegistry.Register(window, condition);
         }
