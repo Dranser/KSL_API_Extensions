@@ -1,44 +1,41 @@
-﻿using KSL.API.Extensions;
-
-public class CarLinkerFeature : FeatureBase
+﻿namespace KSL.API.Extensions
 {
-    public override string Id => "system.carlinker";
-    public override bool IsSystem => true;
-
-    private readonly ICarBinder _carBinder = new CarBinder();
-    private readonly IProfileLoader _profileLoader = new ProfileLoader();
-
-    public override void OnInit()
+    public class CarLinkerFeature : FeatureBase
     {
-        PatcherHooks.CarLoaded += OnCarLoaded;
-        PatcherHooks.DynoEntered += OnDynoEntered;
-        PatcherHooks.DynoExited += OnDynoExited;
-    }
+        public override string Id => "system.carlinker";
 
-    public override void OnShutdown()
-    {
-        PatcherHooks.CarLoaded -= OnCarLoaded;
-        PatcherHooks.DynoEntered -= OnDynoEntered;
-        PatcherHooks.DynoExited -= OnDynoExited;
-        CarState.Clear();
-    }
+        public override void Init()
+        {
+            KSLEvents.CarLoaded += OnCarLoaded;
+            KSLEvents.DynoEntered += OnDynoEntered;
+            KSLEvents.DynoExited += OnDynoExited;
+        }
 
-    private void OnCarLoaded(RaceCar car)
-    {
-        var context = _carBinder.Bind(car);
-        context.Profile = _profileLoader.Load(car);
-        CarState.Set(context);
-    }
+        public override void Shutdown()
+        {
+            KSLEvents.CarLoaded -= OnCarLoaded;
+            KSLEvents.DynoEntered -= OnDynoEntered;
+            KSLEvents.DynoExited -= OnDynoExited;
+            CarState.Clear();
+        }
 
-    private void OnDynoEntered(UIDynostandContext ctx)
-    {
-        if (CarState.Current != null)
-            CarState.Current.DynoContext = ctx;
-    }
+        private void OnCarLoaded(RaceCar car)
+        {
+            var context = CarContextFactory.Create(car);
+            context.Profile = CarProfileService.Load(car);
+            CarState.Set(context);
+        }
 
-    private void OnDynoExited()
-    {
-        if (CarState.Current != null)
-            CarState.Current.DynoContext = null;
+        private void OnDynoEntered(UIDynostandContext ctx)
+        {
+            if (CarState.Current != null)
+                CarState.Current.DynoContext = ctx;
+        }
+
+        private void OnDynoExited()
+        {
+            if (CarState.Current != null)
+                CarState.Current.DynoContext = null;
+        }
     }
 }

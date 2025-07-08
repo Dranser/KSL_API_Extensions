@@ -1,4 +1,3 @@
-using CarX;
 using UnityEngine;
 
 namespace KSL.API.Extensions
@@ -17,8 +16,6 @@ namespace KSL.API.Extensions
         public static bool IsDrifting { get; private set; }
 
         private const float SpeedThreshold = 20f;
-        private const float DriftForceThreshold = 5000f;
-        private const float DriftRatioThreshold = 1.5f;
 
         private static GameStateTracker _instance;
 
@@ -44,7 +41,7 @@ namespace KSL.API.Extensions
 
         private void UpdateDriftAndOffTrack(CarContext ctx)
         {
-            if (!IsOnTrack || ctx == null || !ctx.IsValid())
+            if (!IsOnTrack || !CarValidator.IsValid(ctx))
             {
                 OffTrackTime = 0f;
                 IsDrifting = false;
@@ -54,7 +51,7 @@ namespace KSL.API.Extensions
             IsDrifting = ctx.RaceCar.attachedDriftController?.isDrift ?? false;
 
             bool isOffTrack = Surface.HasOffTrackPenalty;
-            bool highSpeed = ctx.CarX.speedKMH > SpeedThreshold;
+            bool highSpeed = CarDataAccessor.GetCarX(ctx)?.speedKMH > SpeedThreshold;
 
             if (isOffTrack && highSpeed && !IsDrifting)
                 OffTrackTime += Time.deltaTime;

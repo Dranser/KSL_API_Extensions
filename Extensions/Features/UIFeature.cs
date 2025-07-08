@@ -7,12 +7,10 @@ namespace KSL.API.Extensions.UI
     public class UIFeature : FeatureBase, IModFeatureLifecycle
     {
         public override string Id => "system.ui";
-        public override bool IsSystem => true;
 
-        public override void OnInit()
+        public override void Init()
         {
-            UIContext.Init();
-            UIContext.DiscoverUI(Assembly.GetExecutingAssembly());
+            UIContext.Init(Assembly.GetExecutingAssembly());
         }
 
         public void Update()

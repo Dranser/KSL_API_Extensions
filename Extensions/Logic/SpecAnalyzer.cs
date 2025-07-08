@@ -16,14 +16,12 @@
             var drive = ParseDrive(transmission.gearType.ToString());
             var engine = DetermineEnginePosition(weight.frontPercent);
 
-            var spec = new SpecProfile
+            return new SpecProfile
             {
                 RaceClass = raceClass,
                 DriveType = drive,
                 EnginePosition = engine
             };
-
-            return spec;
         }
 
         private string ParseRaceClass(string identifier)

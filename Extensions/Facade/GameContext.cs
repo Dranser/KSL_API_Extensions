@@ -1,5 +1,5 @@
-﻿using CarX;
-using DB.Meta;
+﻿using DB.Meta;
+using CarX;
 
 namespace KSL.API.Extensions
 {
@@ -10,10 +10,10 @@ namespace KSL.API.Extensions
         public static RaceCar RaceCar => Car?.RaceCar;
         public static PlayerCarProfile Profile => Car?.Profile;
         public static Wheel[] Wheels => Car?.Wheels;
-        public static CarX.Car CarX => Car?.CarX;
-        public static BaseCar.Desc Desc => Car?.Desc;
+        public static CarX.Car CarX => CarDataAccessor.GetCarX(Car);
+        public static BaseCar.Desc Desc => CarDataAccessor.GetDesc(Car);
 
-        public static bool CarIsValid => Car?.IsValid() ?? false;
+        public static bool CarIsValid => CarValidator.IsValid(Car);
         public static bool CarIsLinked => Car?.IsLinked ?? false;
 
         public static bool IsOnTrack => GameStateTracker.IsOnTrack;

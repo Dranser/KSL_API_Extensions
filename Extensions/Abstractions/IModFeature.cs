@@ -3,11 +3,10 @@
     public interface IModFeature
     {
         string Id { get; }
-        bool Enabled { get; }
-        bool IsSystem { get; }
+        bool Enabled { get; set; }
 
-        void OnInit();
-        void OnReady();
-        void OnShutdown();
+        void Init();
+        void Ready();
+        void Shutdown();
     }
 }

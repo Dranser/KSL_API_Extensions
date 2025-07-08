@@ -1,12 +1,11 @@
-﻿using KSL.API.Extensions;
-
-public class GameStateTrackerFeature : FeatureBase
+﻿namespace KSL.API.Extensions
 {
-    public override string Id => "system.gamestate";
-    public override bool IsSystem => true;
-
-    public override void OnInit()
+    public class GameStateTrackerFeature : FeatureBase
     {
-        GameStateTracker.Init();
+        public override string Id => "system.gamestate";
+        public override void Init()
+        {
+            GameStateTracker.Init();
+        }
     }
 }

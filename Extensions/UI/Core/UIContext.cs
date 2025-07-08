@@ -7,11 +7,12 @@ namespace KSL.API.Extensions.UI
     {
         public static event Action InvalidateRequested;
 
-        public static void Init()
+        public static void Init(Assembly assembly)
         {
+            Discover(assembly);
         }
 
-        public static void DiscoverUI(Assembly assembly)
+        public static void Discover(Assembly assembly)
         {
             foreach (var type in assembly.GetTypes())
             {

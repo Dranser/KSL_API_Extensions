@@ -1,12 +1,12 @@
-﻿using KSL.API.Extensions;
-
-public class MainDispatcherFeature : FeatureBase
+﻿namespace KSL.API.Extensions
 {
-    public override string Id => "system.dispatcher";
-    public override bool IsSystem => true;
-
-    public override void OnInit()
+    public class MainDispatcherFeature : FeatureBase
     {
-        MainThreadDispatcher.Init();
+        public override string Id => "system.dispatcher";
+
+        public override void Init()
+        {
+            MainThreadDispatcher.Init();
+        }
     }
 }
