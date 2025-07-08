@@ -81,5 +81,29 @@ namespace KSL.API.Extensions.UI
             tex.Apply();
             return tex;
         }
+
+        public static Texture2D GenerateRPMGradient(int width, int height)
+        {
+            var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            tex.wrapMode = TextureWrapMode.Clamp;
+            tex.filterMode = FilterMode.Bilinear;
+
+            for (int x = 0; x < width; x++)
+            {
+                float t = x / (float)(width - 1);
+
+                Color color;
+                if (t < 0.5f)
+                    color = Color.Lerp(new Color32(0, 191, 207, 255), Color.yellow, t * 2f);
+                else
+                    color = Color.Lerp(Color.yellow, Color.red, (t - 0.5f) * 2f);
+
+                for (int y = 0; y < height; y++)
+                    tex.SetPixel(x, y, color);
+            }
+
+            tex.Apply();
+            return tex;
+        }
     }
 }

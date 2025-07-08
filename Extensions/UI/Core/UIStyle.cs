@@ -14,6 +14,7 @@ namespace KSL.API.Extensions.UI
         public static GUIStyle SectionContentStyle;
         public static GUIStyle WindowStyle;
         public static GUIStyle NotificationStyle;
+        public static GUIStyle HUDStyle;
 
         public static float CollapseHeaderHeight = 24f;
 
@@ -27,6 +28,10 @@ namespace KSL.API.Extensions.UI
         private static Texture2D _sliderFill;
         private static Texture2D _sliderKnob;
         private static Texture2D _notificationBg;
+
+        public static Texture2D RPMBarBgTop;
+        public static Texture2D HUDBoxBgBottom;
+        public static Texture2D RPMFillCyan;
 
         public static void Init()
         {
@@ -54,6 +59,11 @@ namespace KSL.API.Extensions.UI
             _sliderKnob = UITextureGenerator.GenerateForRect(16, 24, new Color32(255, 255, 255, 255), 4, 4);
 
             _notificationBg = UITextureGenerator.GenerateForRect(400, 60, new Color32(50, 50, 50, 255), 6, 6);
+
+            RPMBarBgTop = UITextureGenerator.GenerateForRect(400, 20, new Color32(30, 30, 30, 255), 6, 0);
+            HUDBoxBgBottom = UITextureGenerator.GenerateForRect(400, 40, new Color32(30, 30, 30, 255), 0, 6);
+            RPMFillCyan = UITextureGenerator.GenerateForRect(200, 32, new Color32(0, 191, 207, 255), 4, 0);
+
         }
 
         private static void CreateStyles()
@@ -133,6 +143,16 @@ namespace KSL.API.Extensions.UI
                 border = new RectOffset(6, 6, 6, 6),
                 padding = new RectOffset(10, 10, 10, 10),
                 normal = { background = _notificationBg, textColor = Color.white }
+            };
+
+            HUDStyle = new GUIStyle(GUI.skin.box)
+            {
+                fontSize = 16,
+                alignment = TextAnchor.MiddleCenter,
+                fontStyle = FontStyle.Normal,
+                border = new RectOffset(10, 10, 10, 10),
+                padding = new RectOffset(10, 10, 6, 4),
+                normal = { background = _sectionContentBg, textColor = Color.white }
             };
         }
 

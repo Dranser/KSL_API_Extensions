@@ -102,5 +102,9 @@ namespace KSL.API.Extensions
         }
 
         public static IEnumerable<IModFeature> List() => _features.Values;
+        public static T Get<T>() where T : class, IModFeature
+        {
+            return _features.Values.OfType<T>().FirstOrDefault();
+        }
     }
 }

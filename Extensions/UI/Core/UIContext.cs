@@ -16,15 +16,16 @@ namespace KSL.API.Extensions.UI
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (type.GetCustomAttribute<UIWindowAttribute>() == null) continue;
-                if (!typeof(IUIWindowBuilder).IsAssignableFrom(type)) continue;
+                if (type.GetCustomAttribute<UIWindowAttribute>() != null &&
+                    typeof(IUIWindowBuilder).IsAssignableFrom(type))
+                {
+                    var instance = (IUIWindowBuilder)Activator.CreateInstance(type);
+                    if (instance == null) continue;
 
-                var instance = (IUIWindowBuilder)Activator.CreateInstance(type);
-                if (instance == null) continue;
-
-                var window = new UIWindow(instance.Id, instance.Title, instance.Width, instance.Height);
-                window.Build(instance.Build);
-                RegisterWindow(window, instance.Condition);
+                    var window = new UIWindow(instance.Id, instance.Title, instance.Width, instance.Height);
+                    window.Build(instance.Build);
+                    RegisterWindow(window, instance.Condition);
+                }
             }
         }
 
@@ -34,7 +35,6 @@ namespace KSL.API.Extensions.UI
 
             UIWindowRegistry.DrawAll();
             UINotificationManager.DrawAll();
-            UIHUDManager.DrawAll();
         }
 
         public static void RegisterWindow(UIWindow window, Func<bool> condition = null)
@@ -45,11 +45,6 @@ namespace KSL.API.Extensions.UI
         public static void ShowNotification(string message, float duration = 3f)
         {
             UINotificationManager.Show(message, duration);
-        }
-
-        public static void RegisterHUD(string id, Action<UnityEngine.Rect> drawer)
-        {
-            UIHUDManager.Register(id, drawer);
         }
 
         public static void Invalidate()

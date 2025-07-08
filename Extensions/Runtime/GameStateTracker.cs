@@ -14,6 +14,7 @@ namespace KSL.API.Extensions
 
         public static float OffTrackTime { get; private set; }
         public static bool IsDrifting { get; private set; }
+        public static float DriftAngle { get; private set; }
 
         private const float SpeedThreshold = 20f;
 
@@ -49,6 +50,7 @@ namespace KSL.API.Extensions
             }
 
             IsDrifting = ctx.RaceCar.attachedDriftController?.isDrift ?? false;
+            DriftAngle = ctx?.RaceCar?.attachedDriftController?.driftAngle ?? 0f;
 
             bool isOffTrack = Surface.HasOffTrackPenalty;
             bool highSpeed = CarDataAccessor.GetCarX(ctx)?.speedKMH > SpeedThreshold;
